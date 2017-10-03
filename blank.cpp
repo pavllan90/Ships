@@ -13,10 +13,10 @@ Blank::Blank()
 Blank::Blank(QString on, QString os, QString n, QString t, QString h)
 {
     printf("\nInit constructor\n");
-    bool *f;
+    bool *f  =new bool;
     *f = true;
     t.toFloat(f);
-    if(on==""&&os==""&&n==""&&t==""&&h=="") *f = false;
+    if(on==""||os==""||n==""||t==""||h=="") *f = false;
     else if(t.toFloat()<=0) *f = false;
     if(*f)
     {
@@ -28,10 +28,11 @@ Blank::Blank(QString on, QString os, QString n, QString t, QString h)
     }
     else
     {
-        owner = Blank().owner;
-        name = Blank().name;
-        tonnage = Blank().tonnage;
-        home = Blank().home;
+        Blank a;
+        owner = a.owner;
+        name = a.name;
+        tonnage = a.tonnage;
+        home = a.home;
     }
 }
 

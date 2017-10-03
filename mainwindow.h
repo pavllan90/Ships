@@ -18,9 +18,10 @@ public:
 private slots:
     void show_list();
     void add();
+    void search();
 private:
     Ui::MainWindow *ui;
-    Blank mass[10];
+    Blank *mass[10];
     int count;
 
 };

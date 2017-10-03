@@ -14,6 +14,7 @@ int main(int argc, char *argv[])
         w.show();
 
         return a.exec();
+        return 0;
     }
     else
     {
@@ -23,5 +24,6 @@ int main(int argc, char *argv[])
         b.show();
         Blank c = b;
         c.show();
+        return 0;
     }
 }
