@@ -27,7 +27,7 @@ void MainWindow::show_list()
 {
     for(int i = 0; i<count; i++)
     {
-        ui->textEdit->append("Blank #"+QString::number(i)+"\nOwners name: "+mass[i]->owner.name+"\nOwners surname: "+mass[i]->owner.surname+"\nShips name: "+mass[i]->name+"\nTonnage: "+QString::number(mass[i]->tonnage)+"\nHome port: "+mass[i]->home);
+        ui->textEdit->append("Blank #"+QString::number(i)+"\nOwners name: "+mass[i]->getOwner().name+"\nOwners surname: "+mass[i]->getOwner().surname+"\nShips name: "+mass[i]->getName()+"\nTonnage: "+QString::number(mass[i]->getTonnage())+"\nHome port: "+mass[i]->getHome());
     }
 }
 
@@ -37,8 +37,8 @@ void MainWindow::search()
     ui->textEdit->append(s_name);
     bool f = false;
     for(int i = 0; i<count; i++)
-        if(QString::compare(mass[i]->name, s_name)==0)
-            f = true, ui->textEdit->append("Found:\nOwners name: "+mass[i]->owner.name+"\nOwners surname: "+mass[i]->owner.surname+"\nShips name: "+mass[i]->name+"\nTonnage: "+QString::number(mass[i]->tonnage)+"\nHome port: "+mass[i]->home);
+        if(QString::compare(mass[i]->getName(), s_name)==0)
+            f = true, ui->textEdit->append("Found:\nOwners name: "+mass[i]->getOwner().name+"\nOwners surname: "+mass[i]->getOwner().surname+"\nShips name: "+mass[i]->getName()+"\nTonnage: "+QString::number(mass[i]->getTonnage())+"\nHome port: "+mass[i]->getHome());
     if(!f) ui->textEdit->append("No ships with such name\n");
     ui->lineEdit_5->clear();
 }
@@ -47,6 +47,4 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
-
-
 

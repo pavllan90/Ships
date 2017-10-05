@@ -2,7 +2,6 @@
 
 Blank::Blank()
 {
-    printf("\nBasic constructor\n");
     owner.name = "Ekaterina";
     owner.surname = "Volkova";
     name = "Avrora";
@@ -10,35 +9,29 @@ Blank::Blank()
     home = "Sankt-Petersburg";
 }
 
-Blank::Blank(QString on, QString os, QString n, QString t, QString h)
+Blank::Blank(QString _oname, QString _osurname, QString _name, QString _tonnage, QString _home)
 {
-    printf("\nInit constructor\n");
     bool *f  =new bool;
     *f = true;
-    t.toFloat(f);
-    if(on==""||os==""||n==""||t==""||h=="") *f = false;
-    else if(t.toFloat()<=0) *f = false;
+    _tonnage.toFloat(f);
+    if(f&&_tonnage.toFloat()<=0) *f = false;
     if(*f)
     {
-        owner.name = on;
-        owner.surname=os;
-        name = n;
-        tonnage = t.toFloat();
-        home = h;
+        tonnage = _tonnage.toFloat();
     }
     else
     {
-        Blank a;
-        owner = a.owner;
-        name = a.name;
-        tonnage = a.tonnage;
-        home = a.home;
+        tonnage = Blank().tonnage;
     }
+    owner.name = _oname!="" ? _oname : Blank().owner.name;
+    owner.surname = _osurname!="" ? _osurname : Blank().owner.surname;
+    name = _name!="" ? _name : Blank().name;
+    home = _home!="" ? _home : Blank().home;
+
 }
 
 Blank::Blank(const Blank &a)
 {
-    printf("\nCopy constructor\n");
     owner = a.owner;
     name = a.name;
     tonnage = a.tonnage;
@@ -53,4 +46,48 @@ void Blank::show()
 Blank::~Blank()
 {
 
+}
+
+FI Blank::getOwner()
+{
+    return owner;
+}
+
+QString Blank::getName()
+{
+    return name;
+}
+
+float Blank::getTonnage()
+{
+    return tonnage;
+}
+
+QString Blank::getHome()
+{
+    return home;
+}
+
+void Blank::setOwner(FI _owner)
+{
+    owner.name = (_owner.name!="") ? _owner.name : owner.name;
+    owner.surname = (_owner.surname!="") ? _owner.surname : owner.surname;
+}
+
+void Blank::setName(QString _name)
+{
+    name = (_name!="") ? _name : name;
+}
+
+void Blank::setTonnage(QString _tonnage)
+{
+    bool f = true;
+    _tonnage.toFloat(&f);
+    f = f&(_tonnage.toFloat()>0) ? true :false;
+    tonnage = f ? _tonnage.toFloat() : tonnage;
+}
+
+void Blank::setHome(QString _home)
+{
+    home = _home!="" ? _home : home;
 }
