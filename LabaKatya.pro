@@ -13,11 +13,15 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    blank.cpp
+    blank.cpp \
+    node.cpp \
+    rbtree.cpp
 
 
 HEADERS  += mainwindow.h \
-    blank.h
+    blank.h \
+    node.h \
+    rbtree.h
 
 
 FORMS    += mainwindow.ui

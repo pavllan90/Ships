@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "blank.h"
+#include "rbtree.h"
 
 namespace Ui {
 class MainWindow;
@@ -19,10 +19,12 @@ private slots:
     void show_list();
     void add();
     void search();
+    void save();
+    void load();
+    void del();
 private:
     Ui::MainWindow *ui;
-    Blank *mass[10];
-    int count;
+    RBTree tree;
 
 };
 

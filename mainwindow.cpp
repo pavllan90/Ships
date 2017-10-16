@@ -1,46 +1,57 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <cassert>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    count = 0;
     QObject::connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(add()));
     QObject::connect(ui->pushButton_2, SIGNAL(clicked()), this, SLOT(show_list()));
     QObject::connect(ui->pushButton_3, SIGNAL(clicked()), this, SLOT(search()));
+    QObject::connect(ui->pushButton_4, SIGNAL(clicked()), this, SLOT(save()));
+    QObject::connect(ui->pushButton_5, SIGNAL(clicked()), this, SLOT(load()));
+    QObject::connect(ui->pushButton_6, SIGNAL(clicked()), this, SLOT(del()));
 }
 
 void MainWindow::add()
 {
-    mass[count] = new Blank(ui->lineEdit->text(), ui->lineEdit_2->text(), ui->lineEdit_3->text(), ui->lineEdit_4->text(), ui->lineEdit_6->text());
-    count+=1;
+    if(ui->lineEdit_7->text()!="") tree.insertByKey(ui->lineEdit_7->text().toInt(), Blank(ui->lineEdit->text(), ui->lineEdit_2->text(), ui->lineEdit_3->text(), ui->lineEdit_4->text().toFloat(), ui->lineEdit_6->text(), ui->lineEdit_10->text().toFloat()));
     ui->lineEdit->clear();
     ui->lineEdit_2->clear();
     ui->lineEdit_3->clear();
     ui->lineEdit_4->clear();
     ui->lineEdit_6->clear();
+    ui->lineEdit_7->clear();
+}
+
+void MainWindow::del()
+{
+    tree.deleteByKey(ui->lineEdit_9->text().toInt());
+    std::cout<<"====+++===="<<std::endl;
 }
 
 void MainWindow::show_list()
 {
-    for(int i = 0; i<count; i++)
-    {
-        ui->textEdit->append("Blank #"+QString::number(i)+"\nOwners name: "+mass[i]->getOwner().name+"\nOwners surname: "+mass[i]->getOwner().surname+"\nShips name: "+mass[i]->getName()+"\nTonnage: "+QString::number(mass[i]->getTonnage())+"\nHome port: "+mass[i]->getHome());
-    }
+    tree.show();
+}
+
+void MainWindow::save()
+{
+    tree.writeToFile(ui->lineEdit_8->text());
+}
+
+void MainWindow::load()
+{
+    tree.readFromFile(ui->lineEdit_8->text());
 }
 
 void MainWindow::search()
 {
     QString s_name = ui->lineEdit_5->text();
-    ui->textEdit->append(s_name);
-    bool f = false;
-    for(int i = 0; i<count; i++)
-        if(QString::compare(mass[i]->getName(), s_name)==0)
-            f = true, ui->textEdit->append("Found:\nOwners name: "+mass[i]->getOwner().name+"\nOwners surname: "+mass[i]->getOwner().surname+"\nShips name: "+mass[i]->getName()+"\nTonnage: "+QString::number(mass[i]->getTonnage())+"\nHome port: "+mass[i]->getHome());
-    if(!f) ui->textEdit->append("No ships with such name\n");
-    ui->lineEdit_5->clear();
+    RBTree res = tree.find(s_name);
+    res.show();
 }
 
 MainWindow::~MainWindow()

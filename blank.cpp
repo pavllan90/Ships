@@ -7,35 +7,28 @@ Blank::Blank()
     name = "Avrora";
     tonnage = 10.6;
     home = "Sankt-Petersburg";
+    lineage = 1000;
 }
 
-Blank::Blank(QString _oname, QString _osurname, QString _name, QString _tonnage, QString _home)
+Blank::Blank(QString _oname, QString _osurname, QString _name, float _tonnage, QString _home, float _lineage)
 {
-    bool *f  =new bool;
-    *f = true;
-    _tonnage.toFloat(f);
-    if(f&&_tonnage.toFloat()<=0) *f = false;
-    if(*f)
-    {
-        tonnage = _tonnage.toFloat();
-    }
-    else
-    {
-        tonnage = Blank().tonnage;
-    }
+    tonnage = _tonnage>0 ? _tonnage : Blank().tonnage;
     owner.name = _oname!="" ? _oname : Blank().owner.name;
     owner.surname = _osurname!="" ? _osurname : Blank().owner.surname;
     name = _name!="" ? _name : Blank().name;
     home = _home!="" ? _home : Blank().home;
+    lineage = _lineage > 0 ? _lineage : Blank().lineage;
 
 }
 
 Blank::Blank(const Blank &a)
 {
-    owner = a.owner;
+    owner.name = a.owner.name;
+    owner.surname = a.owner.surname;
     name = a.name;
     tonnage = a.tonnage;
     home = a.home;
+    lineage = a.lineage;
 }
 
 void Blank::show()
@@ -46,6 +39,16 @@ void Blank::show()
 Blank::~Blank()
 {
 
+}
+
+void Blank::setLineage(float _lineage)
+{
+    lineage = _lineage > 0 ? _lineage : lineage;
+}
+
+float Blank::getLineage()
+{
+    return lineage;
 }
 
 FI Blank::getOwner()
@@ -76,15 +79,12 @@ void Blank::setOwner(FI _owner)
 
 void Blank::setName(QString _name)
 {
-    name = (_name!="") ? _name : name;
+    name = _name!="" ? _name : name;
 }
 
-void Blank::setTonnage(QString _tonnage)
+void Blank::setTonnage(float _tonnage)
 {
-    bool f = true;
-    _tonnage.toFloat(&f);
-    f = f&(_tonnage.toFloat()>0) ? true :false;
-    tonnage = f ? _tonnage.toFloat() : tonnage;
+    tonnage = _tonnage>0 ? _tonnage : tonnage;
 }
 
 void Blank::setHome(QString _home)
