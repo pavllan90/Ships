@@ -9,7 +9,8 @@ Node::Node()
     right = new Node (this);
     is_Leaf = false;
     red = 1;
-    key = -1;
+    key = "A";
+    data = NULL;
 }
 
 Node::Node(Node *a)
@@ -19,6 +20,7 @@ Node::Node(Node *a)
     red = 0;
     is_Leaf = true;
     key = -1;
+    //data = new Blank(*(a->data));
 }
 
 Node* Node::grandparent()
@@ -47,14 +49,3 @@ Node* Node::sibling()
     else return this->parent->left;
 }
 
-
-void Node::show()
-{
-    cout<<key<<endl;
-    cout<<data.getOwner().name.toLatin1().data()<<endl;
-    cout<<data.getOwner().surname.toLatin1().data()<<endl;
-    cout<<data.getName().toLatin1().data()<<endl;
-    cout<<data.getHome().toLatin1().data()<<endl;
-    cout<<data.getTonnage()<<endl;
-    cout<<"-------------"<<endl;
-}

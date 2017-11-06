@@ -10,36 +10,37 @@ class RBTree
 public:
     RBTree();
     RBTree (const RBTree &a);
-    Node* getRoot();
-    RBTree find(QString s_name);
-    void show(Node *_root = 0);
+    Blank* find(QString shipName);
+    void showAll();
     int size();
     bool isEmpty();
-    void deleteByKey(int _key);
-    Node *findByKey(Node* _root, int _key);
-    void insertByKey(int _key, Blank _data);
-    void writeToFile(QString f_name);
-    void readFromFile(QString f_name);
-private:
+    void deleteByKey(QString _key);
+    void writeToFile(QString fileName);
+    void readFromFile(QString fileName);
+    void insertByKey(Blank *_data);
+
     Node* root;
-    void rotate_left(Node* n);
-    void rotate_right(Node* n);
-    void find_one(RBTree *result, Node* root, QString s_name);
-    void deleteOne(Node *n);
-    void insert1(Node* n);
-    void insert2(Node* n);
-    void insert3(Node* n);
-    void insert4(Node* n);
-    void insert5(Node* n);
-    void delete1(Node *n);
-    void delete2(Node *n);
-    void delete3(Node *n);
-    void delete4(Node *n);
-    void delete5(Node *n);
-    void delete6(Node *n);
-    void insert(Blank a, int _key);
+private:
+    void show(Node *_root);
+    void rotateLeft(Node* n);
+    void rotateRight(Node* n);
+    void findOne(Blank **result, Node* root, QString shipName);
+    void deleteNode(Node *n);
+    void insertCase1(Node* n);
+    void insertCase2(Node* n);
+    void insertCase3(Node* n);
+    void insertCase4(Node* n);
+    void insertCase5(Node* n);
+    void deleteCase1(Node *n);
+    void deleteCase2(Node *n);
+    void deleteCase3(Node *n);
+    void deleteCase4(Node *n);
+    void deleteCase5(Node *n);
+    void deleteCase6(Node *n);
     Node* getNext(Node* n);
-    int size_of;
+    bool compare(QString a, QString b);
+    Node* getByKey(Node* _root, QString _key);
+    int sizeOf;
 };
 
 #endif // RBTREE_H

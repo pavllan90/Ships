@@ -4,110 +4,79 @@
 
 RBTree::RBTree()
 {
-    size_of = 0;
+    sizeOf = 0;
     root = NULL;
 }
 
 RBTree::RBTree(const RBTree &a)
 {
-    size_of = 0;
+    sizeOf = 0;
     root = NULL;
     Node* temp = a.root;
     while(temp->left&&!temp->left->is_Leaf) temp = temp->left;
     while(temp&&!temp->is_Leaf)
     {
-        insertByKey(temp->key, temp->data);
+        insertByKey(temp->data);
         temp = getNext(temp);
     }
-//    for(int i = 0; i<a.size_of&&temp; i++)
-//    {
-//        insertByKey(temp->key, temp->data);
-//        temp = getNext(temp);
-//    }
 }
 
-void RBTree::writeToFile(QString f_name)
+void RBTree::insertByKey(Blank *_data)
 {
-    Node* _r = root;
-    QFile file;
-    file.setFileName(f_name);
-    file.open(QIODevice::WriteOnly);
-    QDataStream stream (&file);
-    while(!_r->left->is_Leaf)
+    qDebug("%s",_data->getName().toLatin1().data());
+    Node* nex = getByKey(root, _data->getName());
+    //_data->show();
+    if(!nex)
     {
-        _r=_r->left;
-    }
-    while(_r)
-    {
-        stream<<QString::number(_r->key)<<_r->data.getOwner().name<<_r->data.getOwner().surname<<_r->data.getName()<<QString::number(_r->data.getTonnage())<<_r->data.getHome()<<QString::number(_r->data.getLineage());
-        _r=getNext(_r);
-    }
-    file.close();
-}
-
-void RBTree::readFromFile(QString f_name)
-{
-    QFile file;
-    file.setFileName(f_name);
-    file.open(QIODevice::ReadOnly);
-    QDataStream stream(&file);
-    while(!file.atEnd())
-    {
-        int _key = 0;
-        QString K;
-        QString o_name ;
-        QString o_surname;
-        QString _name;
-        QString _home ;
-        QString _tonnage;
-        QString _lineage;
-        stream>>K>>o_name>>o_surname>>_name>>_tonnage>>_home>>_lineage;
-        _key = K.toInt();
-        Blank x (o_name, o_surname, _name, _tonnage.toFloat(), _home, _lineage.toFloat());
-        insertByKey(_key, x);
-    }
-    file.close();
-}
-
-void RBTree::deleteByKey(int _key)
-{
-    Node* delNode =NULL;
-    delNode = findByKey(root, _key);
-    if(delNode)deleteOne(delNode);
-    else std::cout<<"No such key"<<std::endl;
-}
-
-Node* RBTree::findByKey(Node *_root, int _key)
-{
-    if(_root&&!_root->is_Leaf)
-    {
-        if(_root->key==_key) return _root;
+        Node* temp = new Node;
+        temp->data=_data;
+        temp->key = _data->getName();
+        if(!root) root = temp , insertCase1(root);
         else
         {
-            if(_key<_root->key) return findByKey(_root->left, _key);
-            else return findByKey(_root->right, _key);
-            return NULL;
+            Node* r = root;
+            bool f = true;
+            while(!(r->left->is_Leaf&&r->right->is_Leaf)&&f)
+            {
+                if(compare(r->key,temp->key))
+                {
+                    if(!r->left->is_Leaf)
+                        r=r->left;
+                    else
+                        f = false;
+                }
+                else
+                {
+                    if(!r->right->is_Leaf)
+                        r=r->right;
+                    else f = false;
+                }
+            }
+            temp->parent=r;
+            if(compare(temp->key,r->key)) r->right = temp;
+            else r->left = temp;
+            insertCase1(temp);
         }
+        while(root->parent) root = root->parent;
+        sizeOf+=1;
     }
-    else return NULL;
 }
 
-void RBTree::show(Node *_root)
+void RBTree::deleteByKey(QString _key)
 {
-    if(_root == 0) _root = root;
-    if(_root)
-    {
-        if(!_root->is_Leaf){
-        show(_root->left);
-        _root->show();
-        show(_root->right);
-        }
-    }
+    Node* del_node =NULL;
+    del_node = getByKey(root, _key);
+    if(del_node)deleteNode(del_node);
+}
+
+void RBTree::showAll()
+{
+    show(root);
 }
 
 int RBTree::size()
 {
-    return size_of;
+    return sizeOf;
 }
 
 bool RBTree::isEmpty()
@@ -116,11 +85,38 @@ bool RBTree::isEmpty()
     else return true;
 }
 
-RBTree RBTree::find(QString s_name)
+bool RBTree::compare(QString a, QString b)
 {
-    RBTree * res = new RBTree;
-    find_one(res, root, s_name);
-    return *res;
+    int x = 0;
+    while(x<a.length()&&x<b.length()&&a.at(x)==b.at(x)) x+=1;
+    if(x == a.length()||x==b.length())
+    {
+        if(a.length()<b.length()) return true;
+        else return false;
+    }
+    else
+    {
+        if(a.at(x)>b.at(x))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+}
+
+void RBTree::show(Node *_root)
+{
+    if(_root)
+    {
+        if(!_root->is_Leaf){
+        show(_root->left);
+        _root->data->show();
+        show(_root->right);
+        }
+    }
 }
 
 Node* RBTree::getNext(Node *n)
@@ -132,12 +128,12 @@ Node* RBTree::getNext(Node *n)
         while(!next->left->is_Leaf) next = next->left;
         return next;
     }
-    else if(n->parent->left==n) return next->parent;
-    else if(n->parent->parent&&n->parent->parent->left==n->parent) return next->parent;
+    else if(n->parent&&n->parent->left&&n->parent->left==n) return next->parent;
+    else if(n->parent&&n->parent->parent&&n->parent->parent->left&&n->parent->parent->left==n->parent) return next->parent->parent;
     else return NULL;
 }
 
-void RBTree::deleteOne(Node *n)
+void RBTree::deleteNode(Node *n)
 {
     Node* child;
     if(!n->right->is_Leaf)
@@ -167,23 +163,159 @@ void RBTree::deleteOne(Node *n)
             if (child1->red ==1)
                 child1->red = 0;
             else
-                delete1(child1);
+                deleteCase1(child1);
     }
     root = child1;
     while(root->parent) root = root->parent;
-    size_of-=1;
+    sizeOf-=1;
     delete child;
 }
 
-void RBTree::delete1(Node* n)
+Blank *RBTree::find(QString shipName)
 {
-    if(n->parent)
+    Blank *res = NULL;
+    findOne(&res, root, shipName);
+    return res;
+}
+
+void RBTree::findOne(Blank **result, Node* root, QString shipName)
+{
+    if(root&&!root->is_Leaf)
     {
-        delete2(n);
+        if(root->data->getName()==shipName) *result=root->data;
+        findOne(result, root->left, shipName);
+        findOne(result, root->right, shipName);
     }
 }
 
-void RBTree::delete2(Node* n)
+Node* RBTree::getByKey(Node *_root, QString _key)
+{
+    if(_root&&!_root->is_Leaf)
+    {
+        if(_root->key==_key) return _root;
+        else
+        {
+            if(_key<_root->key) return getByKey(_root->left, _key);
+            else return getByKey(_root->right, _key);
+            return NULL;
+        }
+    }
+    else return NULL;
+}
+
+void RBTree::writeToFile(QString fileName)
+{
+    Node* _r = root;
+    QFile file;
+    file.setFileName(fileName);
+    file.open(QIODevice::WriteOnly);
+    QDataStream stream (&file);
+    while(!_r->left->is_Leaf)
+    {
+        _r=_r->left;
+    }
+    for(int i = 0; i<sizeOf; i++)
+    {
+        stream<<_r->data->getOwner().name<<_r->data->getOwner().surname<<_r->data->getName()<<QString::number(_r->data->getTonnage())<<_r->data->getHome()<<QString::number(_r->data->getLineage());
+        _r=getNext(_r);
+    }
+    file.close();
+}
+
+void RBTree::readFromFile(QString fileName)
+{
+    QFile file;
+    file.setFileName(fileName);
+    file.open(QIODevice::ReadOnly);
+    QDataStream stream(&file);
+    while(!file.atEnd())
+    {
+        QString _ownersName ;
+        QString _ownersSurname;
+        QString _name;
+        QString _home ;
+        QString _tonnage;
+        QString _lineage;
+        stream>>_ownersName>>_ownersSurname>>_name>>_tonnage>>_home>>_lineage;
+        Blank x (_ownersName, _ownersSurname, _name, _tonnage.toFloat(), _home, _lineage.toFloat());
+        insertByKey(new Blank (_ownersName, _ownersSurname, _name, _tonnage.toFloat(), _home, _lineage.toFloat()));
+    }
+    file.close();
+}
+
+void RBTree::insertCase1(Node* n)
+{
+    if(n->parent == NULL)
+    {
+        n->red=0;
+    }
+    else insertCase2(n);
+}
+
+void RBTree::insertCase2(Node* n)
+{
+    if(n->parent->red == 1 )
+    {
+        insertCase3(n);
+    }
+}
+
+void RBTree::insertCase3(Node* n)
+{
+    Node *u = n->uncle(), *g = n->grandparent();
+    if(u&&u->red==1)
+    {
+        n->parent->red = 0;
+        u->red = 0;
+        g->red = 1;
+        insertCase1(g);
+    }
+    else
+    {
+        insertCase4(n);
+    }
+}
+
+void RBTree::insertCase4(Node* n)
+{
+    Node *g = n->grandparent();
+    if(n == n->parent->right && n->parent==g->left)
+    {
+        rotateLeft(n->parent);
+        n = n->left;
+    }
+    else if(n == n->parent->left && n->parent==g->right)
+    {
+        rotateRight(n->parent);
+        n = n->right;
+    }
+    insertCase5(n);
+}
+
+void RBTree::insertCase5(Node* n)
+{
+    Node *g = n->grandparent();
+    n->parent->red = 0;
+    g->red = 1;
+    if(n==n->parent->left&&n->parent == g->left)
+    {
+        rotateRight(g);
+    }
+    else
+    {
+        rotateLeft(g);
+    }
+}
+
+void RBTree::deleteCase1(Node* n)
+{
+    if(n->parent)
+    {
+        deleteCase2(n);
+    }
+}
+
+void RBTree::deleteCase2(Node* n)
 {
     Node *s = n->sibling();
     if(s->red==1)
@@ -192,34 +324,29 @@ void RBTree::delete2(Node* n)
         s->red = 0;
         if(n == n->parent->left)
         {
-            rotate_left(n->parent);
+            rotateLeft(n->parent);
         }
         else
         {
-            rotate_right(n->parent);
+            rotateRight(n->parent);
         }
     }
 
-    delete3(n);
+    deleteCase3(n);
 }
 
-void RBTree::delete3(Node* n)
+void RBTree::deleteCase3(Node* n)
 {
     Node* s = n->sibling();
     if(n->parent->red==0&&s->red==0&&s->left->red==0&&s->right->red==0)
     {
         s->red=1;
-        delete1(n->parent);
+        deleteCase1(n->parent);
     }
-    else delete4(n);
+    else deleteCase4(n);
 }
 
-Node* RBTree::getRoot()
-{
-    return root;
-}
-
-void RBTree::delete4(Node* n)
+void RBTree::deleteCase4(Node* n)
 {
     Node* s = n->sibling();
     if(n->parent->red==1&&s->red==0&&s->left->red==0&&s->right->red==0)
@@ -227,10 +354,10 @@ void RBTree::delete4(Node* n)
         s->red=1;
         n->parent->red=0;
     }
-    else delete5(n);
+    else deleteCase5(n);
 }
 
-void RBTree::delete5(Node* n)
+void RBTree::deleteCase5(Node* n)
 {
     Node *s = n->sibling();
 
@@ -240,19 +367,19 @@ void RBTree::delete5(Node* n)
                 (s->left->red==1)) {
                 s->red==1;
                 s->left->red==0;
-                rotate_right(s);
+                rotateRight(s);
             } else if ((n == n->parent->right) &&
                        (s->left->red==0) &&
                        (s->right->red==1)) {
                 s->red==1;
                 s->right->red == 0;
-                rotate_left(s);
+                rotateLeft(s);
             }
         }
-        delete6(n);
+        deleteCase6(n);
 }
 
-void RBTree::delete6(Node* n)
+void RBTree::deleteCase6(Node* n)
 {
     Node *s = n->sibling();
 
@@ -261,66 +388,14 @@ void RBTree::delete6(Node* n)
 
         if (n == n->parent->left) {
             s->right->red=0;
-            rotate_left(n->parent);
+            rotateLeft(n->parent);
         } else {
             s->left->red=0;
-            rotate_right(n->parent);
+            rotateRight(n->parent);
         }
 }
 
-void RBTree::insert(Blank a, int _key)
-{
-    Node* temp = new Node;
-    temp->data=a;
-    temp->key = _key;
-    if(!root) root = temp ,insert1(root);
-    else
-    {
-        Node* r = root;
-        bool f = true;
-        while(!(r->left->is_Leaf&&r->right->is_Leaf)&&f)
-        {
-            if(r->key>=temp->key)
-            {
-                if(!r->left->is_Leaf)
-                    r=r->left;
-                else
-                    f = false;
-            }
-            else
-            {
-                if(!r->right->is_Leaf)
-                    r=r->right;
-                else f = false;
-            }
-        }
-        temp->parent=r;
-        if(temp->key>=r->key) r->right = temp;
-        else r->left = temp;
-        insert1(temp);
-    }
-    while(root->parent) root = root->parent;
-    size_of+=1;
-}
-
-void RBTree::insertByKey(int _key, Blank _data)
-{
-    Node* nex = findByKey(root, _key);
-    if(!nex)
-        insert (_data, _key);
-}
-
-void RBTree::find_one(RBTree *result, Node* root, QString s_name)
-{
-    if(root&&!root->is_Leaf)
-    {
-        if(root->data.getName()==s_name) result->insert(root->data, root->key);
-        find_one(result, root->left, s_name);
-        find_one(result, root->right, s_name);
-    }
-}
-
-void RBTree::rotate_left(Node* n)
+void RBTree::rotateLeft(Node* n)
 {
     Node* pivot = n->right;
     pivot->parent = n->parent;
@@ -344,7 +419,7 @@ void RBTree::rotate_left(Node* n)
     pivot->left = n;
 }
 
-void RBTree::rotate_right(Node* n)
+void RBTree::rotateRight(Node* n)
 {
     Node* pivot = n->left;
     pivot->parent = n->parent;
@@ -368,66 +443,4 @@ void RBTree::rotate_right(Node* n)
     pivot->right = n;
 }
 
-void RBTree::insert1(Node* n)
-{
-    if(n->parent == NULL)
-    {
-        n->red=0;
-    }
-    else insert2(n);
-}
 
-void RBTree::insert2(Node* n)
-{
-    if(n->parent->red == 1 )
-    {
-        insert3(n);
-    }
-}
-
-void RBTree::insert3(Node* n)
-{
-    Node *u = n->uncle(), *g = n->grandparent();
-    if(u&&u->red==1)
-    {
-        n->parent->red = 0;
-        u->red = 0;
-        g->red = 1;
-        insert1(g);
-    }
-    else
-    {
-        insert4(n);
-    }
-}
-
-void RBTree::insert4(Node* n)
-{
-    Node *g = n->grandparent();
-    if(n == n->parent->right && n->parent==g->left)
-    {
-        rotate_left(n->parent);
-        n = n->left;
-    }
-    else if(n == n->parent->left && n->parent==g->right)
-    {
-        rotate_right(n->parent);
-        n = n->right;
-    }
-    insert5(n);
-}
-
-void RBTree::insert5(Node* n)
-{
-    Node *g = n->grandparent();
-    n->parent->red = 0;
-    g->red = 1;
-    if(n==n->parent->left&&n->parent == g->left)
-    {
-        rotate_right(g);
-    }
-    else
-    {
-        rotate_left(g);
-    }
-}
