@@ -15,7 +15,6 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(ui->pushButton_2, SIGNAL(clicked()), this, SLOT(isEmpty()));
     QObject::connect(ui->pushButton_6, SIGNAL(clicked()), this, SLOT(size()));
     QObject::connect(ui->treeWidget, SIGNAL(itemClicked(QTreeWidgetItem*,int)), this, SLOT(showOne(QTreeWidgetItem*)));
-    //item = new QTreeWidgetItem(0);
     timer = new QTimer;
     timer->start(200);
     QObject::connect(timer, SIGNAL(timeout()), this, SLOT(check()));
@@ -69,7 +68,6 @@ void MainWindow::recursiveShow(Node *_root, QTreeWidgetItem *_parent)
          {
              QTreeWidgetItem* left = new QTreeWidgetItem(0);
              left->setText(0, _root->left->data->getName());
-             //QObject::connect(*left, SIGNAL(clicked()),this, SLOT(del()));
              _parent->addChild(left);
             recursiveShow(_root->left, left);
          }
@@ -86,7 +84,7 @@ void MainWindow::recursiveShow(Node *_root, QTreeWidgetItem *_parent)
 void MainWindow::showOne(QTreeWidgetItem *_item)
 {
     dial = new Dialog(_item->text(0), &tree);
-    dial->show();//;}
+    dial->show();
 }
 
 void MainWindow::save()
@@ -101,20 +99,21 @@ void MainWindow::load()
 
 void MainWindow::isEmpty()
 {
-    if(tree.isEmpty()) ui->lineEdit_9->setText("Empty");
-    else ui->lineEdit_9->setText("Not empty");
+    if(tree.isEmpty()) ui->label_13->setText("Empty");
+    else ui->label_13->setText("Not empty");
 }
 
 void MainWindow::size()
 {
-    ui->lineEdit_9->setText("Size is "+QString::number(tree.size()));
+    ui->label_13->setText("Size is "+QString::number(tree.size()));
 }
 
 void MainWindow::search()
 {
     QString s_name = ui->lineEdit_5->text();
-    if(tree.find(s_name)) dial = new Dialog(s_name, &tree);
+    if(tree.find(s_name)) dial = new Dialog(s_name, &tree),
     dial->show();
+    else ui->label_13->setText("No ship with such name");
 }
 
 MainWindow::~MainWindow()

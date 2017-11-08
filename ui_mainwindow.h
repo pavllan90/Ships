@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Tue 31. Oct 16:49:35 2017
+** Created: Tue 7. Nov 15:37:17 2017
 **      by: Qt User Interface Compiler version 4.7.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -103,7 +103,7 @@ public:
     QLabel *label_12;
     QPushButton *pushButton_2;
     QPushButton *pushButton_6;
-    QLineEdit *lineEdit_9;
+    QLabel *label_13;
     QSpacerItem *horizontalSpacer;
     QSpacerItem *horizontalSpacer_2;
     QSpacerItem *verticalSpacer;
@@ -441,10 +441,10 @@ public:
 
         gridLayout->addWidget(pushButton_6, 1, 3, 1, 1);
 
-        lineEdit_9 = new QLineEdit(tab_3);
-        lineEdit_9->setObjectName(QString::fromUtf8("lineEdit_9"));
+        label_13 = new QLabel(tab_3);
+        label_13->setObjectName(QString::fromUtf8("label_13"));
 
-        gridLayout->addWidget(lineEdit_9, 0, 3, 1, 1);
+        gridLayout->addWidget(label_13, 0, 3, 1, 1);
 
 
         gridLayout_2->addLayout(gridLayout, 1, 1, 1, 1);
@@ -511,10 +511,11 @@ public:
         pushButton_4->setText(QApplication::translate("MainWindow", "Save", 0, QApplication::UnicodeUTF8));
         pushButton_5->setText(QApplication::translate("MainWindow", "Load", 0, QApplication::UnicodeUTF8));
         label_10->setText(QApplication::translate("MainWindow", "Actions with the container:", 0, QApplication::UnicodeUTF8));
-        label_11->setText(QApplication::translate("MainWindow", "Enter ships name:", 0, QApplication::UnicodeUTF8));
+        label_11->setText(QApplication::translate("MainWindow", "Enter ships name for searching:", 0, QApplication::UnicodeUTF8));
         label_12->setText(QApplication::translate("MainWindow", "File name:", 0, QApplication::UnicodeUTF8));
         pushButton_2->setText(QApplication::translate("MainWindow", "Emptiness", 0, QApplication::UnicodeUTF8));
         pushButton_6->setText(QApplication::translate("MainWindow", "Size", 0, QApplication::UnicodeUTF8));
+        label_13->setText(QString());
         tabWidget->setTabText(tabWidget->indexOf(tab_3), QApplication::translate("MainWindow", "Container:", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 

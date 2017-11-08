@@ -14,10 +14,10 @@ public:
                 int _passengersAmount,
                 QString _finalDestination);
     ~CruiseBlank();
-    virtual void setPassengersAmount(int _passengersAmount);
-    virtual int getPassengersAmount();
-    virtual void setFinalDestination(QString _finalDestination);
-    virtual QString getFinalDestination();
+    void setPassengersAmount(int _passengersAmount);
+    int getPassengersAmount();
+    void setFinalDestination(QString _finalDestination);
+    QString getFinalDestination();
     virtual void show();
     virtual int getType();
 private:

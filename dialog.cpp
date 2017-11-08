@@ -36,8 +36,8 @@ Dialog::Dialog(QString _name, RBTree *_tree) : QDialog(0),
     {
         ui->tableWidget->setVerticalHeaderItem(6,new QTableWidgetItem("Passengers: "));
         ui->tableWidget->setVerticalHeaderItem(7,new QTableWidgetItem("Destination: "));
-        ui->tableWidget->setItem(0, 6, new QTableWidgetItem(QString::number(data->getPassengersAmount())));
-        ui->tableWidget->setItem(0, 7, new QTableWidgetItem(data->getFinalDestination()));
+        ui->tableWidget->setItem(0, 6, new QTableWidgetItem(QString::number(dynamic_cast<CruiseBlank*>(data)->getPassengersAmount())));
+        ui->tableWidget->setItem(0, 7, new QTableWidgetItem(dynamic_cast<CruiseBlank*>(data)->getFinalDestination()));
     }
     QObject::connect(ui->pushButton_2, SIGNAL(clicked()), this, SLOT(save()));
     QObject::connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(del()));
@@ -65,9 +65,9 @@ void Dialog::save()
     data->setLineage(temp->text().toFloat());
     if(data->getType()==1){
         temp = ui->tableWidget->takeItem(6,0);
-        data->setPassengersAmount(temp->text().toInt());
+        dynamic_cast<CruiseBlank*>(data)->setPassengersAmount(temp->text().toInt());
         temp = ui->tableWidget->takeItem(7,0);
-        data->setFinalDestination(temp->text());
+        dynamic_cast<CruiseBlank*>(data)->setFinalDestination(temp->text());
     }
 }
 

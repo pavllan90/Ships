@@ -216,7 +216,10 @@ void RBTree::writeToFile(QString fileName)
     }
     for(int i = 0; i<sizeOf; i++)
     {
-        stream<<_r->data->getOwner().name<<_r->data->getOwner().surname<<_r->data->getName()<<QString::number(_r->data->getTonnage())<<_r->data->getHome()<<QString::number(_r->data->getLineage());
+        if(_r->data->getType()==0)
+            stream<<QString::number(_r->data->getType())<<_r->data->getOwner().name<<_r->data->getOwner().surname<<_r->data->getName()<<QString::number(_r->data->getTonnage())<<_r->data->getHome()<<QString::number(_r->data->getLineage());
+        else
+            stream<<QString::number(_r->data->getType())<<_r->data->getOwner().name<<_r->data->getOwner().surname<<_r->data->getName()<<QString::number(_r->data->getTonnage())<<_r->data->getHome()<<QString::number(_r->data->getLineage())<<dynamic_cast<CruiseBlank*>(_r->data)->getFinalDestination()<<QString::number(dynamic_cast<CruiseBlank*>(_r->data)->getPassengersAmount());
         _r=getNext(_r);
     }
     file.close();
@@ -236,9 +239,22 @@ void RBTree::readFromFile(QString fileName)
         QString _home ;
         QString _tonnage;
         QString _lineage;
-        stream>>_ownersName>>_ownersSurname>>_name>>_tonnage>>_home>>_lineage;
-        Blank x (_ownersName, _ownersSurname, _name, _tonnage.toFloat(), _home, _lineage.toFloat());
-        insertByKey(new Blank (_ownersName, _ownersSurname, _name, _tonnage.toFloat(), _home, _lineage.toFloat()));
+        QString _fdist;
+        QString _pas_am;
+        QString type;
+        stream>>type;
+        if(type.toInt()==0)
+        {
+            stream>>_ownersName>>_ownersSurname>>_name>>_tonnage>>_home>>_lineage;
+            //Blank x (_ownersName, _ownersSurname, _name, _tonnage.toFloat(), _home, _lineage.toFloat());
+            insertByKey(new Blank (_ownersName, _ownersSurname, _name, _tonnage.toFloat(), _home, _lineage.toFloat()));
+        }
+        else
+        {
+            stream>>_ownersName>>_ownersSurname>>_name>>_tonnage>>_home>>_lineage>>_fdist>>_pas_am;
+            //Blank x (_ownersName, _ownersSurname, _name, _tonnage.toFloat(), _home, _lineage.toFloat());
+            insertByKey(new CruiseBlank (_ownersName, _ownersSurname, _name, _tonnage.toFloat(), _home, _lineage.toFloat(), _pas_am.toInt(), _fdist));
+        }
     }
     file.close();
 }

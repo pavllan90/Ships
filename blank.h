@@ -28,10 +28,10 @@ public:
     void setLineage(float _lineage);
     float getLineage();
     virtual void show();
-    virtual void setFinalDestination(QString _finalDestination);
-    virtual QString getFinalDestination();
-    virtual void setPassengersAmount(int _passengersAmount);
-    virtual int getPassengersAmount();
+//    virtual void setFinalDestination(QString _finalDestination);
+//    virtual QString getFinalDestination();
+//    virtual void setPassengersAmount(int _passengersAmount);
+//    virtual int getPassengersAmount();
     virtual int getType();
 protected:
     FI owner;

@@ -31,26 +31,6 @@ Blank::Blank(const Blank &a)
     lineage = a.lineage;
 }
 
-void Blank::setFinalDestination(QString _finalDestination)
-{
-
-}
-
-QString Blank::getFinalDestination()
-{
-    return "";
-}
-
-void Blank::setPassengersAmount(int _passengersAmount)
-{
-
-}
-
-int Blank::getPassengersAmount()
-{
-    return 0;
-}
-
 void Blank::show()
 {
     printf("Owners name: %s\nOwners surname: %s\nShips name: %s\nTonnage: %f\nHome port: %s\n", owner.name.toLatin1().data(), owner.surname.toLatin1().data(), name.toLatin1().data(), tonnage, home.toLatin1().data());
