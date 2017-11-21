@@ -25,12 +25,23 @@ void RBTree::insertByKey(Blank *_data)
 {
     qDebug("%s",_data->getName().toLatin1().data());
     Node* nex = getByKey(root, _data->getName());
-    //_data->show();
     if(!nex)
     {
         Node* temp = new Node;
-        temp->data=_data;
-        temp->key = _data->getName();
+        if(_data->getType()==0)
+        {
+            Blank *cp_data = new Blank;
+            *cp_data = *dynamic_cast<Blank*>(_data);
+            temp->data = cp_data;
+        }
+        else
+        {
+            CruiseBlank *cp_data = new CruiseBlank;
+            *cp_data = *(dynamic_cast<CruiseBlank*>(_data));
+            temp->data = cp_data;
+        }
+        delete _data;
+        temp->key = temp->data->getName();
         if(!root) root = temp , insertCase1(root);
         else
         {
@@ -168,7 +179,8 @@ void RBTree::deleteNode(Node *n)
     root = child1;
     while(root->parent) root = root->parent;
     sizeOf-=1;
-    delete child;
+    delete child;//
+    delete child1;
 }
 
 Blank *RBTree::find(QString shipName)

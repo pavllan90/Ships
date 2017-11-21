@@ -8,11 +8,15 @@ Dialog::Dialog(QWidget *parent) :
     ui->setupUi(this);
 }
 
-Dialog::Dialog(QString _name, RBTree *_tree) : QDialog(0),
-    ui(new Ui::Dialog), name(_name), tree(_tree)
+Dialog::Dialog(QString _name, RBTree *_tree, bool *_changed) : QDialog(0),
+    ui(new Ui::Dialog), name(_name), tree(_tree), changed(_changed)
 {
     ui->setupUi(this);
-    data = tree->find(_name);
+    if(tree->find(_name)->getType()==0)
+        data = new Blank;
+    else
+        data = new CruiseBlank;
+    *data = *tree->find(_name);
     ui->label->setText("Ship '"+data->getName()+"'");
     if(data->getType()==0)
     ui->tableWidget->setRowCount(6), this->setFixedSize(310,307);
@@ -46,6 +50,7 @@ Dialog::Dialog(QString _name, RBTree *_tree) : QDialog(0),
 void Dialog::del()
 {
     tree->deleteByKey(data->getName());
+    *changed = true;
     this->close();
 }
 
@@ -53,10 +58,13 @@ void Dialog::save()
 {
     FI a;
     QTableWidgetItem *temp = ui->tableWidget->takeItem(0,0);
+    tree->deleteByKey(data->getName());
     a.name = temp->text();
     temp = ui->tableWidget->takeItem(1,0);
     a.surname = temp->text();
     data->setOwner(a);
+    temp = ui->tableWidget->takeItem(2,0);
+    data->setName(temp->text());
     temp = ui->tableWidget->takeItem(3,0);
     data->setTonnage(temp->text().toFloat());
     temp = ui->tableWidget->takeItem(4,0);
@@ -69,6 +77,9 @@ void Dialog::save()
         temp = ui->tableWidget->takeItem(7,0);
         dynamic_cast<CruiseBlank*>(data)->setFinalDestination(temp->text());
     }
+    tree->insertByKey(data);
+    *changed = true;
+    this->close();
 }
 
 Dialog::~Dialog()

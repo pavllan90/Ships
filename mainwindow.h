@@ -32,6 +32,7 @@ private slots:
     void check();
 private:
     RBTree tree;
+    bool changed;
     Ui::MainWindow *ui;
     Dialog *dial;
     QTimer* timer;

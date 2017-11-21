@@ -14,7 +14,7 @@ class Dialog : public QDialog
     
 public:
     explicit Dialog(QWidget *parent = 0);
-    Dialog(QString _name, RBTree *_tree);
+    Dialog(QString _name, RBTree *_tree, bool *_changed);
     ~Dialog();
     
 private:
@@ -22,6 +22,7 @@ private:
     RBTree *tree;
     QString name;
     Blank *data;
+    bool *changed;
 private slots:
     void del();
     void save();

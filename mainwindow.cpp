@@ -39,6 +39,7 @@ void MainWindow::check()
 {
     if(!ui->checkBox->isChecked()) ui->lineEdit_7->setVisible(false), ui->label_5->setVisible(false), ui->lineEdit_11->setVisible(false), ui->label_8->setVisible(false);
     else ui->lineEdit_7->setVisible(true), ui->label_5->setVisible(true), ui->lineEdit_11->setVisible(true), ui->label_8->setVisible(true);
+    if(changed) show_list(1);
 
 }
 
@@ -52,12 +53,12 @@ void MainWindow::show_list(int a)
 {
     if(!tree.isEmpty()&&a==1){
     ui->treeWidget->clear();
-
     QTreeWidgetItem *item = new QTreeWidgetItem(0);
     item->setText(0, tree.root->data->getName());
     ui->treeWidget->addTopLevelItem(item);
     recursiveShow(tree.root, item);
     }
+    changed = false;
 }
 
 void MainWindow::recursiveShow(Node *_root, QTreeWidgetItem *_parent)
@@ -83,7 +84,7 @@ void MainWindow::recursiveShow(Node *_root, QTreeWidgetItem *_parent)
 
 void MainWindow::showOne(QTreeWidgetItem *_item)
 {
-    dial = new Dialog(_item->text(0), &tree);
+    dial = new Dialog(_item->text(0), &tree, &changed);
     dial->show();
 }
 
@@ -111,7 +112,7 @@ void MainWindow::size()
 void MainWindow::search()
 {
     QString s_name = ui->lineEdit_5->text();
-    if(tree.find(s_name)) dial = new Dialog(s_name, &tree),
+    if(tree.find(s_name)) dial = new Dialog(s_name, &tree, &changed),
     dial->show();
     else ui->label_13->setText("No ship with such name");
 }

@@ -18,7 +18,6 @@ public:
     void writeToFile(QString fileName);
     void readFromFile(QString fileName);
     void insertByKey(Blank *_data);
-
     Node* root;
 private:
     void show(Node *_root);
